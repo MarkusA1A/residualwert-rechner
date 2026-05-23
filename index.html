@@ -53,6 +53,8 @@
       color: var(--color-text);
       min-height: 100vh;
       padding-bottom: env(safe-area-inset-bottom);
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
     }
 
     /* ── HEADER ── */
@@ -60,6 +62,7 @@
       background: var(--color-accent);
       color: #fff;
       padding: 16px 24px 14px;
+      padding-top: calc(16px + env(safe-area-inset-top));
       position: sticky;
       top: 0;
       z-index: 100;
@@ -116,9 +119,46 @@
       grid-template-columns: 1fr 400px;
       gap: 24px;
       align-items: start;
+      /* prevent content overflow on iOS */
+      overflow-x: hidden;
     }
     @media (max-width: 1100px) {
       .app-main { grid-template-columns: 1fr; padding: 16px 14px 40px; }
+    }
+
+    /* ── MOBILE (iPhone) ── */
+    @media (max-width: 600px) {
+      .app-header { padding: 12px 16px 10px; }
+      .header-subtitle { display: none; }
+      .header-actions { gap: 5px; }
+      .btn-header { font-size: 0.72rem; padding: 5px 10px; }
+
+      .project-bar { padding: 10px 14px; }
+      .project-bar-inner { flex-direction: column; gap: 8px; }
+      .project-bar .field { min-width: unset; max-width: unset; width: 100%; }
+
+      .app-main { padding: 12px 10px 40px; gap: 16px; }
+      .card + .card { margin-top: 12px; }
+      .card-header { padding: 14px 16px; min-height: 56px; }
+      .card-body { padding: 0 14px 16px; }
+      .card-summary { display: none; }
+
+      .field-row, .field-row.three { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .field-row.full { grid-template-columns: 1fr; }
+
+      .residual-hero-value { font-size: 1.9rem; }
+      .metrics-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .metric-box { padding: 8px 10px; }
+
+      .results-body { padding: 14px; }
+      .waterfall td { font-size: 0.76rem; padding: 6px 0; }
+      .sens-table th, .sens-table td { font-size: 0.68rem; padding: 4px 5px; }
+
+      footer { padding: 14px 16px; font-size: 0.7rem; }
+    }
+    @media (max-width: 380px) {
+      .field-row, .field-row.three { grid-template-columns: 1fr; }
+      .btn-header { font-size: 0.68rem; padding: 4px 8px; }
     }
 
     /* ── CARDS ── */
@@ -231,16 +271,20 @@
       outline: none;
       padding: 9px 12px;
       font-family: var(--font-mono);
-      font-size: 0.9rem;
+      font-size: 16px; /* ≥16px prevents iOS Safari auto-zoom */
       font-weight: 500;
       color: var(--color-text);
       background: transparent;
       min-width: 0;
       text-align: right;
+      -webkit-appearance: none;
+      appearance: none;
     }
-    .input-wrap input[type="text"] {
+    .input-wrap input[type="text"],
+    .input-wrap input[type="date"] {
       font-family: var(--font-sans);
       text-align: left;
+      font-size: 16px;
     }
     .input-unit {
       padding: 0 10px 0 4px;
@@ -264,15 +308,16 @@
     .toggle-btn {
       flex: 1;
       text-align: center;
-      padding: 7px 12px;
+      padding: 7px 8px;
       border-radius: var(--radius-pill);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 500;
       cursor: pointer;
       border: none;
       background: transparent;
       color: var(--color-text-secondary);
       transition: var(--transition);
+      line-height: 1.3;
     }
     .toggle-btn.active {
       background: var(--color-surface);
@@ -761,8 +806,8 @@
       </div>
       <div class="card-body">
         <div class="toggle-row">
-          <button class="toggle-btn active" id="tab-verkauf" onclick="setGdvMode('verkauf')">Neubauprojekt / Verkauf</button>
-          <button class="toggle-btn" id="tab-rendite" onclick="setGdvMode('rendite')">Renditeobjekt / Zinshausbewertung</button>
+          <button class="toggle-btn active" id="tab-verkauf" onclick="setGdvMode('verkauf')">Neubauprojekt<br><span style="font-size:0.7em;opacity:0.8">Verkauf / ETW</span></button>
+          <button class="toggle-btn" id="tab-rendite" onclick="setGdvMode('rendite')">Renditeobjekt<br><span style="font-size:0.7em;opacity:0.8">Zinshaus / Rendite</span></button>
         </div>
 
         <!-- VERKAUF MODE -->
