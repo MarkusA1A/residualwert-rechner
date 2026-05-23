@@ -783,8 +783,8 @@
           </div>
           <div class="field">
             <label>BGZ / GFZ (Info)</label>
-            <div class="input-wrap"><input type="number" id="gfz" value="0" min="0" step="0.1" oninput="onInput()" readonly style="background:var(--color-bg);color:var(--color-text-muted)"><span class="input-unit">–</span></div>
-            <div class="field-note">Errechnet aus BGF/GF</div>
+            <div class="input-wrap"><input type="text" id="gfz" readonly style="background:var(--color-bg);color:var(--color-text-muted);font-family:var(--font-mono);text-align:right" placeholder="–"><span class="input-unit">–</span></div>
+            <div class="field-note">Errechnet aus BGF / GF</div>
           </div>
         </div>
       </div>
@@ -1085,7 +1085,7 @@
         <div class="field-row full">
           <div class="field">
             <label>Ankauf-NK gesamt (errechnet)</label>
-            <div class="input-wrap"><input type="number" id="ankSumDisplay" readonly style="background:var(--color-bg);color:var(--color-accent);font-weight:600"><span class="input-unit">%</span></div>
+            <div class="input-wrap"><input type="text" id="ankSumDisplay" readonly style="background:var(--color-bg);color:var(--color-accent);font-weight:600;font-family:var(--font-mono);text-align:right"><span class="input-unit">%</span></div>
             <div class="field-note">Wird auf Residualwert angewendet: Kaufpreis = Residual ÷ (1 + NK-Satz)</div>
           </div>
         </div>
@@ -1115,13 +1115,13 @@
           </div>
           <div class="field">
             <label>Entwicklergewinn (errechnet)</label>
-            <div class="input-wrap"><input type="number" id="gewinnAbs" readonly style="background:var(--color-bg);color:var(--color-text-muted)"><span class="input-unit">€</span></div>
+            <div class="input-wrap"><input type="text" id="gewinnAbs" readonly style="background:var(--color-bg);color:var(--color-text-muted);font-family:var(--font-mono);text-align:right"><span class="input-unit">€</span></div>
           </div>
         </div>
         <div class="field-row full mt-8">
           <div class="field">
             <label>Gewinn auf Gesamtkosten (errechnet)</label>
-            <div class="input-wrap"><input type="number" id="gewinnOnCost" readonly style="background:var(--color-bg);color:var(--color-text-muted)"><span class="input-unit">%</span></div>
+            <div class="input-wrap"><input type="text" id="gewinnOnCost" readonly style="background:var(--color-bg);color:var(--color-text-muted);font-family:var(--font-mono);text-align:right"><span class="input-unit">%</span></div>
             <div class="field-note">Return on Cost – Orientierungswert für die Rentabilität</div>
           </div>
         </div>
@@ -1383,13 +1383,13 @@ function render() {
   document.getElementById('bkBgfRef').value = inp.bgf || '';
   // GFZ
   const gfz = inp.gf > 0 && inp.bgf > 0 ? (inp.bgf / inp.gf) : 0;
-  document.getElementById('gfz').value = gfz > 0 ? fmtNum(gfz, 2) : '';
+  document.getElementById('gfz').value = gfz > 0 ? fmtNum(gfz, 2) : '–';
   // Ankauf NK anzeigen
   const ankTotal = inp.ankGrest + inp.ankGb + inp.ankNotar + inp.ankMakler;
   document.getElementById('ankSumDisplay').value = fmtNum(ankTotal, 2);
   // Gewinn absolut
-  document.getElementById('gewinnAbs').value   = r.entwicklergewinn > 0 ? Math.round(r.entwicklergewinn) : '';
-  document.getElementById('gewinnOnCost').value = r.roc > 0 ? fmtNum(r.roc, 1) : '';
+  document.getElementById('gewinnAbs').value   = r.entwicklergewinn > 0 ? fmtEur(r.entwicklergewinn) : '–';
+  document.getElementById('gewinnOnCost').value = r.roc > 0 ? fmtNum(r.roc, 1) + ' %' : '–';
 
   // Card summaries
   document.getElementById('sum-flaechen').textContent = inp.bgf > 0 ? `BGF ${fmtNum(inp.bgf, 0)} m²` : '–';
