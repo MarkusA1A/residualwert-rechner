@@ -677,13 +677,251 @@
     .project-item-del:hover { opacity: 1; background: rgba(220,38,38,0.08); }
 
     /* ── PRINT ── */
+    /* ── PRINT ── */
     @media print {
-      .app-header, .project-bar, .header-actions, .card-header, .btn-primary, .btn-secondary { display: none !important; }
-      .app-main { display: block; }
-      .card.is-open .card-body { display: block; }
-      .results-panel { position: static; }
-      .card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body > *:not(#print-view) { display: none !important; }
+      #print-view { display: block !important; }
     }
+    #print-view {
+      display: none;
+      font-family: 'Outfit', Arial, sans-serif;
+      font-size: 10pt;
+      color: #1a1a1a;
+      line-height: 1.5;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 14mm 14mm 12mm;
+    }
+    .pv-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 10px;
+      border-bottom: 2.5px solid #0d6e4f;
+      margin-bottom: 14px;
+    }
+    .pv-title-block .pv-eyebrow {
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #0d6e4f;
+      margin-bottom: 2px;
+    }
+    .pv-title-block .pv-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 18pt;
+      font-weight: 500;
+      color: #1a1a1a;
+      line-height: 1.15;
+    }
+    .pv-meta-block { text-align: right; font-size: 8pt; color: #555; line-height: 1.7; }
+    .pv-meta-block strong { color: #1a1a1a; }
+
+    .pv-project-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .pv-pb-cell {
+      padding: 7px 10px;
+      border-right: 1px solid #ddd;
+    }
+    .pv-pb-cell:last-child { border-right: none; }
+    .pv-pb-label {
+      font-size: 6.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #888;
+      margin-bottom: 2px;
+    }
+    .pv-pb-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5pt;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .pv-result-box {
+      background: #0d6e4f;
+      color: #fff;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .pv-result-label {
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
+      margin-bottom: 3px;
+    }
+    .pv-result-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 22pt;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+    .pv-result-minis {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: right;
+    }
+    .pv-result-mini {
+      font-size: 8pt;
+      opacity: 0.85;
+    }
+    .pv-result-mini strong {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9pt;
+      opacity: 1;
+    }
+
+    .pv-section-title {
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #0d6e4f;
+      margin-bottom: 6px;
+      padding-bottom: 3px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    /* Two-column layout */
+    .pv-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    /* Waterfall table */
+    .pv-wf {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 14px;
+      font-size: 9pt;
+    }
+    .pv-wf thead tr {
+      background: #0d6e4f;
+      color: #fff;
+    }
+    .pv-wf thead th {
+      padding: 5px 8px;
+      text-align: left;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .pv-wf thead th:last-child, .pv-wf thead th:nth-last-child(2) {
+      text-align: right;
+    }
+    .pv-wf tbody tr { border-bottom: 1px solid #f0f0f0; }
+    .pv-wf tbody tr:hover { background: #f9f9f9; }
+    .pv-wf td { padding: 4px 8px; vertical-align: middle; }
+    .pv-wf td:nth-child(2), .pv-wf td:nth-child(3) {
+      text-align: right;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8.5pt;
+      white-space: nowrap;
+    }
+    .pv-wf .wf-section-row td {
+      font-size: 7pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #888;
+      padding-top: 9px;
+      padding-bottom: 2px;
+      border-bottom: none;
+    }
+    .pv-wf .wf-sub-row td:first-child { padding-left: 18px; color: #555; }
+    .pv-wf .wf-sub-row td:nth-child(2), .pv-wf .wf-sub-row td:nth-child(3) {
+      color: #555;
+      font-size: 8pt;
+    }
+    .pv-wf .wf-total-row { background: #f5f5f5 !important; }
+    .pv-wf .wf-total-row td {
+      font-weight: 700;
+      border-top: 1.5px solid #ddd;
+      border-bottom: 1.5px solid #ddd;
+    }
+    .pv-wf .wf-result-row { background: rgba(13,110,79,0.06) !important; }
+    .pv-wf .wf-result-row td {
+      font-weight: 700;
+      font-size: 10pt;
+      color: #0d6e4f;
+      border-top: 2px solid #0d6e4f;
+      padding-top: 7px;
+      padding-bottom: 7px;
+    }
+
+    /* Parameters table */
+    .pv-params {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5pt;
+    }
+    .pv-params tr { border-bottom: 1px solid #f0f0f0; }
+    .pv-params td { padding: 4px 6px; }
+    .pv-params td:first-child { color: #555; }
+    .pv-params td:last-child {
+      font-family: 'IBM Plex Mono', monospace;
+      text-align: right;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    /* Sensitivity */
+    .pv-sens {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+    }
+    .pv-sens th, .pv-sens td {
+      padding: 4px 7px;
+      text-align: right;
+      border: 1px solid #e8e8e8;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .pv-sens th {
+      background: #f5f5f5;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 7.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+    }
+    .pv-sens .sens-base { background: rgba(13,110,79,0.08); font-weight: 700; color: #0d6e4f; }
+    .pv-sens .sens-neg { color: #dc2626; }
+
+    .pv-footer {
+      margin-top: 20px;
+      padding-top: 8px;
+      border-top: 1px solid #ddd;
+      font-size: 7pt;
+      color: #888;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .pv-footer-disclaimer { max-width: 70%; line-height: 1.5; }
+    .pv-footer-sig { text-align: right; font-size: 7.5pt; color: #555; }
 
     /* ── UTILS ── */
     .text-muted { color: var(--color-text-muted); }
@@ -1376,12 +1614,15 @@
         <table class="waterfall" id="waterfall-table"></table>
 
         <!-- BUTTONS -->
-        <button class="btn-primary" onclick="window.print()">Ausdruck / PDF</button>
+        <button class="btn-primary" onclick="preparePrint()">Ausdruck / PDF (Profi-Layout)</button>
         <button class="btn-secondary" onclick="saveProject()">Projekt speichern</button>
       </div>
     </div>
   </div><!-- /results-panel -->
 </main>
+
+<!-- PRINT VIEW (nur sichtbar beim Drucken) -->
+<div id="print-view"></div>
 
 <footer>
   <div>© 2025 <a href="mailto:mthalhamer@thalhamer.com">Markus O. Thalhamer</a> · Residualwert-Rechner</div>
@@ -1845,6 +2086,182 @@ function showToast(msg) {
 document.getElementById('modal-load').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal('modal-load');
 });
+
+// ─────────────────────────────────────────────
+// PRINT
+// ─────────────────────────────────────────────
+function preparePrint() {
+  const inp = getInputs();
+  const r   = calc(inp);
+  const gdv = r.gdv;
+  const today = new Date().toLocaleDateString('de-AT', {year:'numeric',month:'long',day:'numeric'});
+  const ankTotal = inp.ankGrest + inp.ankGb + inp.ankNotar + inp.ankMakler;
+
+  const p = (label, value) =>
+    `<tr><td>${label}</td><td>${value}</td></tr>`;
+
+  const wfRow = (cls, label, abs, pct) =>
+    `<tr class="${cls}"><td>${label}</td><td>${abs}</td><td>${pct}</td></tr>`;
+
+  const pctOfGdv = v => gdv > 0 ? fmtNum(v / gdv * 100, 1) + ' %' : '–';
+
+  // Sensitivity
+  const prices    = [-10, -5, 0, +5, +10];
+  const gewinne   = [10, 12, 15, 18, 20];
+  let sensHead = '<tr><th>Preis ± %</th>' + gewinne.map(g => `<th>${g} % Gew.</th>`).join('') + '</tr>';
+  let sensBody = prices.map(dp => {
+    let row = `<tr><td style="text-align:left;font-family:'Outfit',sans-serif;font-weight:600">${dp >= 0 ? '+' : ''}${dp} %</td>`;
+    gewinne.forEach(g => {
+      const mi = Object.assign({}, inp, { gewinnPct: g });
+      if (inp.gdvMode === 'verkauf') mi.wohnPreis = inp.wohnPreis * (1 + dp/100);
+      else mi.jnm = inp.jnm * (1 + dp/100);
+      const rv = calc(mi).residualwert;
+      const isBase = dp === 0 && Math.abs(g - inp.gewinnPct) < 0.1;
+      row += `<td class="${isBase ? 'sens-base' : rv < 0 ? 'sens-neg' : ''}">${fmtEur(rv)}</td>`;
+    });
+    return row + '</tr>';
+  }).join('');
+
+  const html = `
+  <div class="pv-header">
+    <div class="pv-title-block">
+      <div class="pv-eyebrow">Residualwertverfahren &middot; Österreich</div>
+      <div class="pv-title">${inp.projektname || 'Bewertung'}</div>
+    </div>
+    <div class="pv-meta-block">
+      <div>Bewertungsdatum: <strong>${inp.datum || today}</strong></div>
+      <div>Erstellt am: <strong>${today}</strong></div>
+      <div>Erstellt von: <strong>Markus O. Thalhamer</strong></div>
+    </div>
+  </div>
+
+  <div class="pv-project-bar">
+    <div class="pv-pb-cell">
+      <div class="pv-pb-label">Adresse / Lage</div>
+      <div class="pv-pb-value">${inp.adresse || '–'}</div>
+    </div>
+    <div class="pv-pb-cell">
+      <div class="pv-pb-label">Grundstücksfläche</div>
+      <div class="pv-pb-value">${inp.gf > 0 ? fmtNum(inp.gf, 0) + ' m²' : '–'}</div>
+    </div>
+    <div class="pv-pb-cell">
+      <div class="pv-pb-label">BGF / NF</div>
+      <div class="pv-pb-value">${inp.bgf > 0 ? fmtNum(inp.bgf,0) + ' / ' + fmtNum(r.effectiveNf,0) + ' m²' : '–'}</div>
+    </div>
+    <div class="pv-pb-cell">
+      <div class="pv-pb-label">GFZ</div>
+      <div class="pv-pb-value">${inp.gf > 0 && inp.bgf > 0 ? fmtNum(inp.bgf/inp.gf,2) : '–'}</div>
+    </div>
+  </div>
+
+  <div class="pv-result-box">
+    <div>
+      <div class="pv-result-label">Residualwert &mdash; Kaufpreis Grundstück</div>
+      <div class="pv-result-value">${fmtEur(r.residualwert)}</div>
+    </div>
+    <div class="pv-result-minis">
+      ${r.rePerGf  > 0 ? `<div class="pv-result-mini"><strong>${fmtEur(r.rePerGf)}</strong> /m² Grundstück</div>` : ''}
+      ${r.rePerBgf > 0 ? `<div class="pv-result-mini"><strong>${fmtEur(r.rePerBgf)}</strong> /m² BGF</div>` : ''}
+      ${r.rePerNf  > 0 ? `<div class="pv-result-mini"><strong>${fmtEur(r.rePerNf)}</strong> /m² NF</div>` : ''}
+      <div class="pv-result-mini" style="margin-top:4px;opacity:0.7">GDV: ${fmtEur(gdv)}</div>
+    </div>
+  </div>
+
+  <div class="pv-section-title">Kostenstruktur &amp; Residualwertberechnung</div>
+  <table class="pv-wf">
+    <thead><tr>
+      <th style="width:55%">Position</th>
+      <th style="width:25%">Betrag</th>
+      <th style="width:20%">% des GDV</th>
+    </tr></thead>
+    <tbody>
+      ${wfRow('wf-section-row', 'ERTRAGSWERT (GDV)', '', '')}
+      ${inp.gdvMode==='verkauf' && r.erlWohnen > 0  ? wfRow('wf-sub-row','Wohneinheiten', fmtEur(r.erlWohnen), pctOfGdv(r.erlWohnen)) : ''}
+      ${inp.gdvMode==='verkauf' && r.erlGewerbe > 0 ? wfRow('wf-sub-row','Gewerbefläche', fmtEur(r.erlGewerbe), pctOfGdv(r.erlGewerbe)) : ''}
+      ${inp.gdvMode==='verkauf' && r.erlTg > 0      ? wfRow('wf-sub-row','TG-Stellplätze', fmtEur(r.erlTg), pctOfGdv(r.erlTg)) : ''}
+      ${inp.gdvMode==='verkauf' && r.erlFp > 0      ? wfRow('wf-sub-row','Freistellplätze', fmtEur(r.erlFp), pctOfGdv(r.erlFp)) : ''}
+      ${inp.gdvMode==='rendite' ? wfRow('wf-sub-row','Ertragswert (JNM × Faktor)', fmtEur(r.erlosBrutto), '100,0 %') : ''}
+      ${r.abzugVermarkt > 0 ? wfRow('wf-sub-row', '&minus; Vermarktungsabzug ('+inp.vermarktPct+' %)', '− '+fmtEur(r.abzugVermarkt), pctOfGdv(r.abzugVermarkt)) : ''}
+      ${wfRow('wf-total-row', 'GDV netto', fmtEur(gdv), '100,0 %')}
+
+      ${wfRow('wf-section-row', 'BAUKOSTEN', '', '')}
+      ${r.bkRoh > 0    ? wfRow('wf-sub-row', 'Baukosten ('+fmtNum(inp.bgf,0)+' m² × '+fmtEur(inp.bkBgf)+'/m²)', '− '+fmtEur(r.bkRoh), pctOfGdv(r.bkRoh)) : ''}
+      ${r.bauNbk > 0   ? wfRow('wf-sub-row', 'Baunebenkosten ('+fmtNum(inp.bnkArch+inp.bnkFach+inp.bnkOba+inp.bnkBehoerde+inp.bnkPruf+inp.bnkSonst,1)+' % der BK)', '− '+fmtEur(r.bauNbk), pctOfGdv(r.bauNbk)) : ''}
+      ${r.bkSonder > 0 ? wfRow('wf-sub-row', 'Außenanlagen / Sonderkosten', '− '+fmtEur(r.bkSonder), pctOfGdv(r.bkSonder)) : ''}
+      ${wfRow('wf-total-row', 'Baukosten gesamt', '− '+fmtEur(r.bkGesamt), pctOfGdv(r.bkGesamt))}
+
+      ${wfRow('wf-section-row', 'PROJEKTENTWICKLUNGSKOSTEN', '', '')}
+      ${r.vertriebskosten > 0  ? wfRow('wf-sub-row', 'Vertrieb / Marketing ('+inp.vertrieb+' % GDV)', '− '+fmtEur(r.vertriebskosten), pctOfGdv(r.vertriebskosten)) : ''}
+      ${r.projektsteuerung > 0 ? wfRow('wf-sub-row', 'Projektsteuerung ('+inp.pkSteuerung+' % BK)', '− '+fmtEur(r.projektsteuerung), pctOfGdv(r.projektsteuerung)) : ''}
+      ${r.finanzierung > 0     ? wfRow('wf-sub-row', 'Finanzierungskosten ('+inp.finZins+' % / '+inp.finLaufzeit+' Jahre)', '− '+fmtEur(r.finanzierung), pctOfGdv(r.finanzierung)) : ''}
+      ${inp.nbkSonstAbs > 0    ? wfRow('wf-sub-row', 'Sonstige Nebenkosten', '− '+fmtEur(inp.nbkSonstAbs), pctOfGdv(inp.nbkSonstAbs)) : ''}
+      ${r.reserve > 0          ? wfRow('wf-sub-row', 'Reserve Unvorhergesehenes ('+inp.unvorhergesehen+' %)', '− '+fmtEur(r.reserve), pctOfGdv(r.reserve)) : ''}
+      ${wfRow('wf-total-row', 'PE-Kosten gesamt', '− '+fmtEur(r.pekGesamt), pctOfGdv(r.pekGesamt))}
+
+      ${wfRow('wf-section-row', 'ENTWICKLERGEWINN', '', '')}
+      ${wfRow('wf-sub-row', 'Gewinnerwartung ('+inp.gewinnPct+' % des GDV)', '− '+fmtEur(r.entwicklergewinn), pctOfGdv(r.entwicklergewinn))}
+
+      ${wfRow('wf-section-row', 'ANKAUFNEBENKOSTEN GRUNDSTÜCK (Österreich)', '', '')}
+      ${wfRow('wf-sub-row', 'GrESt '+inp.ankGrest+' % + GB '+inp.ankGb+' % + Notar '+inp.ankNotar+' % + Makler '+inp.ankMakler+' %', '− '+fmtEur(r.ankNbk), pctOfGdv(r.ankNbk))}
+
+      ${wfRow('wf-result-row', 'RESIDUALWERT (Kaufpreis Grundstück)', fmtEur(r.residualwert), pctOfGdv(r.residualwert))}
+    </tbody>
+  </table>
+
+  <div class="pv-two-col">
+    <div>
+      <div class="pv-section-title">Eingabeparameter &mdash; Flächen &amp; Erlöse</div>
+      <table class="pv-params">
+        ${inp.bgf     > 0 ? p('BGF (Bruttogrundfäche)', fmtNum(inp.bgf,0)+' m²') : ''}
+        ${r.effectiveNf > 0 ? p('NF (Nutzfläche)', fmtNum(r.effectiveNf,0)+' m²') : ''}
+        ${inp.gf      > 0 ? p('Grundstücksfläche', fmtNum(inp.gf,0)+' m²') : ''}
+        ${inp.gf > 0 && inp.bgf > 0 ? p('GFZ', fmtNum(inp.bgf/inp.gf,2)) : ''}
+        ${inp.gdvMode === 'verkauf' && inp.wohnNf > 0  ? p('Wohnfläche', fmtNum(inp.wohnNf,0)+' m²') : ''}
+        ${inp.gdvMode === 'verkauf' && inp.wohnPreis > 0 ? p('Verkaufspreis Wohnen', fmtEur(inp.wohnPreis)+'/m²') : ''}
+        ${inp.gdvMode === 'verkauf' && inp.gewNf > 0   ? p('Gewerbefläche', fmtNum(inp.gewNf,0)+' m²') : ''}
+        ${inp.gdvMode === 'verkauf' && inp.tgAnz > 0   ? p('TG-Stellplätze', inp.tgAnz+' × '+fmtEur(inp.tgPreis)) : ''}
+        ${inp.gdvMode === 'rendite' ? p('Jahresnettomiete', fmtEur(inp.jnm)) : ''}
+        ${inp.gdvMode === 'rendite' ? p('Kapitalisierungsfaktor', inp.kapFaktor+' ×') : ''}
+        ${inp.vermarktPct > 0 ? p('Vermarktungsabzug', inp.vermarktPct+' %') : ''}
+      </table>
+    </div>
+    <div>
+      <div class="pv-section-title">Eingabeparameter &mdash; Kosten &amp; Ankauf</div>
+      <table class="pv-params">
+        ${p('Baukosten je m² BGF', fmtEur(inp.bkBgf)+'/m²')}
+        ${p('Baunebenkosten gesamt', fmtNum(inp.bnkArch+inp.bnkFach+inp.bnkOba+inp.bnkBehoerde+inp.bnkPruf+inp.bnkSonst,1)+' % der BK')}
+        ${p('Vertriebskosten', inp.vertrieb+' % des GDV')}
+        ${p('Projektsteuerung', inp.pkSteuerung+' % der BK')}
+        ${p('Finanzierung', inp.finZins+' % p.a. / '+inp.finLaufzeit+' Jahre / '+inp.finAnteil+' % FK')}
+        ${p('Reserve Unvorherges.', inp.unvorhergesehen+' %')}
+        ${p('Entwicklergewinn', inp.gewinnPct+' % des GDV')}
+        ${p('Return on Cost', fmtNum(r.roc,1)+' %')}
+        ${p('GrESt + GB + Notar + Makler', fmtNum(ankTotal,1)+' %')}
+      </table>
+    </div>
+  </div>
+
+  <div class="pv-section-title">Sensitivitätsanalyse &mdash; Residualwert bei Preis- und Gewinnvariationen</div>
+  <table class="pv-sens">
+    <thead>${sensHead}</thead>
+    <tbody>${sensBody}</tbody>
+  </table>
+
+  <div class="pv-footer">
+    <div class="pv-footer-disclaimer">
+      Die Inhalte dieser Analyse wurden auf Basis der angegebenen Parameter und Marktannahmen erstellt. Sie stellen keine
+      rechtsverbindliche Wertermittlung gemäß ÖNORM B 1802, ImmoWertV oder LBP dar. Für die Richtigkeit und Vollständigkeit
+      der Eingaben wird keine Haftung übernommen. Eine Plausibilisierung durch einen gerichtlich beeideten Sachverständigen wird empfohlen.
+    </div>
+    <div class="pv-footer-sig">
+      &copy; ${new Date().getFullYear()} Markus O. Thalhamer<br>
+      <a href="mailto:mthalhamer@thalhamer.com">mthalhamer@thalhamer.com</a>
+    </div>
+  </div>`;
+
+  document.getElementById('print-view').innerHTML = html;
+  window.print();
+}
 
 // ─────────────────────────────────────────────
 // INIT
