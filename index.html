@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Residualwert-Rechner · Österreich</title>
+  <meta name="description" content="Residualwertverfahren für Immobilienentwicklungen in Österreich – für Sachverständige und Investoren">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Residualwert">
+  <meta name="theme-color" content="#0d6e4f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=Outfit:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg:             #fafafa;
+      --color-surface:        #ffffff;
+      --color-surface-raised: #f5f5f5;
+      --color-surface-hover:  #eeeeee;
+      --color-border:         rgba(0,0,0,0.08);
+      --color-border-hover:   rgba(0,0,0,0.15);
+      --color-text:           #1a1a1a;
+      --color-text-secondary: #555555;
+      --color-text-muted:     #888888;
+      --color-accent:         #0d6e4f;
+      --color-accent-dim:     #0b5e43;
+      --color-accent-soft:    rgba(13,110,79,0.08);
+      --color-success:        #16a34a;
+      --color-warning:        #d97706;
+      --color-danger:         #dc2626;
+      --color-gold:           #ca8a04;
+      --font-display:         'Playfair Display', Georgia, serif;
+      --font-sans:            'Outfit', -apple-system, sans-serif;
+      --font-mono:            'IBM Plex Mono', 'SF Mono', monospace;
+      --radius-sm:  8px;
+      --radius-md:  12px;
+      --radius-lg:  16px;
+      --radius-xl:  20px;
+      --radius-pill:100px;
+      --shadow-hover:  0 2px 8px rgba(0,0,0,0.06);
+      --shadow-raised: 0 4px 16px rgba(13,110,79,0.20);
+      --transition:    0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* ── HEADER ── */
+    .app-header {
+      background: var(--color-accent);
+      color: #fff;
+      padding: 16px 24px 14px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+    .header-inner {
+      max-width: 1680px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .header-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+    .header-subtitle {
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.75;
+      margin-top: 1px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-header {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .btn-header:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── LAYOUT ── */
+    .app-main {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 24px 24px 40px;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 1100px) {
+      .app-main { grid-template-columns: 1fr; padding: 16px 14px 40px; }
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .card + .card { margin-top: 16px; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      gap: 12px;
+    }
+    .card-header:hover { background: var(--color-bg); }
+
+    .card-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-accent);
+      margin-bottom: 2px;
+    }
+    .card-title {
+      font-family: var(--font-sans);
+      font-size: 0.97rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+    .card-summary {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .card-toggle {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-muted);
+      flex-shrink: 0;
+      transition: transform var(--transition);
+    }
+    .card.is-open .card-toggle { transform: rotate(180deg); }
+
+    .card-body {
+      padding: 0 20px 20px;
+      display: none;
+    }
+    .card.is-open .card-body { display: block; }
+
+    /* ── FORM ELEMENTS ── */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .field-row.three { grid-template-columns: 1fr 1fr 1fr; }
+    .field-row.full  { grid-template-columns: 1fr; }
+    @media (max-width: 520px) {
+      .field-row, .field-row.three { grid-template-columns: 1fr; }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .field label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .field-note {
+      font-size: 0.68rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+      transition: var(--transition);
+      overflow: hidden;
+    }
+    .input-wrap:focus-within {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent-soft);
+    }
+    .input-wrap input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 9px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--color-text);
+      background: transparent;
+      min-width: 0;
+      text-align: right;
+    }
+    .input-wrap input[type="text"] {
+      font-family: var(--font-sans);
+      text-align: left;
+    }
+    .input-unit {
+      padding: 0 10px 0 4px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    /* ── TOGGLE SWITCH ── */
+    .toggle-row {
+      display: flex;
+      gap: 4px;
+      background: var(--color-surface-raised);
+      border-radius: var(--radius-pill);
+      padding: 3px;
+      margin-bottom: 16px;
+    }
+    .toggle-btn {
+      flex: 1;
+      text-align: center;
+      padding: 7px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      transition: var(--transition);
+    }
+    .toggle-btn.active {
+      background: var(--color-surface);
+      color: var(--color-accent);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      font-weight: 600;
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider {
+      height: 1px;
+      background: var(--color-border);
+      margin: 16px 0;
+    }
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin-bottom: 10px;
+    }
+
+    /* ── RESULTS PANEL ── */
+    .results-panel {
+      position: sticky;
+      top: 80px;
+    }
+    @media (max-width: 1100px) {
+      .results-panel { position: static; }
+    }
+
+    .results-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .results-header {
+      background: var(--color-accent);
+      color: #fff;
+      padding: 16px 20px;
+    }
+    .results-header-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.75;
+      margin-bottom: 2px;
+    }
+    .results-header-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 500;
+    }
+    .results-body { padding: 20px; }
+
+    /* ── RESIDUAL HERO ── */
+    .residual-hero {
+      background: var(--color-accent-soft);
+      border: 1px solid rgba(13,110,79,0.12);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .residual-hero-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-accent);
+      margin-bottom: 4px;
+    }
+    .residual-hero-value {
+      font-family: var(--font-mono);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 500;
+      color: var(--color-accent);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+    .residual-hero-sub {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+      font-family: var(--font-mono);
+    }
+    .residual-hero.negative .residual-hero-value { color: var(--color-danger); }
+    .residual-hero.negative { background: rgba(220,38,38,0.06); border-color: rgba(220,38,38,0.12); }
+
+    /* ── METRICS GRID ── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .metric-box {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+    }
+    .metric-box-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      margin-bottom: 2px;
+    }
+    .metric-box-value {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── WATERFALL TABLE ── */
+    .waterfall { width: 100%; border-collapse: collapse; }
+    .waterfall tr { border-bottom: 1px solid var(--color-border); }
+    .waterfall tr:last-child { border-bottom: none; }
+    .waterfall td {
+      padding: 7px 0;
+      font-size: 0.82rem;
+      vertical-align: middle;
+    }
+    .waterfall td:first-child { color: var(--color-text-secondary); width: 55%; }
+    .waterfall td:last-child {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-text);
+    }
+    .waterfall .wf-positive td:last-child { color: var(--color-success); }
+    .waterfall .wf-negative td:last-child { color: var(--color-danger); }
+    .waterfall .wf-total td {
+      font-weight: 600;
+      padding-top: 10px;
+      border-top: 2px solid var(--color-border);
+    }
+    .waterfall .wf-result td {
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding-top: 10px;
+      border-top: 2px solid var(--color-accent);
+      color: var(--color-accent);
+    }
+    .waterfall .wf-result td:first-child { color: var(--color-accent); }
+    .waterfall .wf-section td:first-child {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--color-text-muted);
+      padding-top: 14px;
+      padding-bottom: 4px;
+    }
+    .waterfall .wf-sub td:first-child {
+      padding-left: 12px;
+      color: var(--color-text-muted);
+      font-size: 0.78rem;
+    }
+    .waterfall .wf-sub td:last-child {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── PROGRESS BAR ── */
+    .cost-bars { margin-bottom: 16px; }
+    .cost-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .cost-bar-label {
+      font-size: 0.72rem;
+      color: var(--color-text-secondary);
+      width: 100px;
+      flex-shrink: 0;
+    }
+    .cost-bar-track {
+      flex: 1;
+      height: 6px;
+      background: var(--color-border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .cost-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+    .cost-bar-pct {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      width: 38px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 10px 20px;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 100%;
+      margin-top: 8px;
+    }
+    .btn-primary:hover { background: var(--color-accent-dim); box-shadow: var(--shadow-raised); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-accent);
+      border: 1.5px solid var(--color-accent);
+      border-radius: var(--radius-pill);
+      padding: 9px 20px;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 100%;
+      margin-top: 8px;
+    }
+    .btn-secondary:hover { background: var(--color-accent-soft); }
+
+    /* ── PROJECT BAR ── */
+    .project-bar {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: 12px 24px;
+    }
+    .project-bar-inner {
+      max-width: 1680px;
+      margin: 0 auto;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .project-bar .field { flex: 1; min-width: 160px; }
+    .project-bar .field:last-of-type { min-width: 130px; max-width: 160px; }
+
+    /* ── SENSITIVITY TABLE ── */
+    .sens-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .sens-table th, .sens-table td {
+      padding: 6px 8px;
+      font-size: 0.74rem;
+      text-align: right;
+      border: 1px solid var(--color-border);
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+    .sens-table th {
+      background: var(--color-surface-raised);
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-secondary);
+    }
+    .sens-table td:first-child { text-align: left; }
+    .sens-table .sens-highlight { background: var(--color-accent-soft); font-weight: 600; color: var(--color-accent); }
+    .sens-table .neg { color: var(--color-danger); }
+    .sens-table .pos { color: var(--color-success); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--color-border);
+      padding: 16px 24px;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      text-align: center;
+      max-width: 1680px;
+      margin: 0 auto;
+    }
+    footer a { color: var(--color-text-muted); text-decoration: none; }
+    footer a:hover { color: var(--color-accent); }
+    .disclaimer {
+      margin-top: 6px;
+      font-size: 0.68rem;
+      line-height: 1.5;
+      color: var(--color-text-muted);
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── MODALS ── */
+    .modal-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--color-surface);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal h2 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .modal-actions button { flex: 1; }
+    .project-list { max-height: 300px; overflow-y: auto; }
+    .project-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      gap: 8px;
+      transition: var(--transition);
+    }
+    .project-item:hover { background: var(--color-bg); }
+    .project-item-name { font-weight: 600; font-size: 0.9rem; }
+    .project-item-date { font-size: 0.72rem; color: var(--color-text-muted); margin-top: 1px; }
+    .project-item-del {
+      font-size: 0.75rem;
+      color: var(--color-danger);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      opacity: 0.6;
+    }
+    .project-item-del:hover { opacity: 1; background: rgba(220,38,38,0.08); }
+
+    /* ── PRINT ── */
+    @media print {
+      .app-header, .project-bar, .header-actions, .card-header, .btn-primary, .btn-secondary { display: none !important; }
+      .app-main { display: block; }
+      .card.is-open .card-body { display: block; }
+      .results-panel { position: static; }
+      .card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+    }
+
+    /* ── UTILS ── */
+    .text-muted { color: var(--color-text-muted); }
+    .mt-8 { margin-top: 8px; }
+    .mt-12 { margin-top: 12px; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-inner">
+    <div>
+      <div class="header-title">Residualwert-Rechner</div>
+      <div class="header-subtitle">Residualwertverfahren · Österreich</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-header" onclick="openLoadModal()">Projekte</button>
+      <button class="btn-header" onclick="saveProject()">Speichern</button>
+      <button class="btn-header" onclick="newProject()">Neu</button>
+      <button class="btn-header" onclick="window.print()">Drucken</button>
+    </div>
+  </div>
+</header>
+
+<!-- PROJECT BAR -->
+<div class="project-bar">
+  <div class="project-bar-inner">
+    <div class="field">
+      <label>Projektname</label>
+      <div class="input-wrap">
+        <input type="text" id="projektname" value="Neues Projekt" oninput="onInput()">
+      </div>
+    </div>
+    <div class="field">
+      <label>Adresse / Lage</label>
+      <div class="input-wrap">
+        <input type="text" id="adresse" placeholder="z.B. Wien, 1020" oninput="onInput()">
+      </div>
+    </div>
+    <div class="field">
+      <label>Datum</label>
+      <div class="input-wrap">
+        <input type="date" id="datum" style="font-family:var(--font-sans);text-align:left;font-size:0.85rem;" oninput="onInput()">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="app-main">
+  <div class="inputs-col">
+
+    <!-- CARD: Flächen -->
+    <div class="card is-open" id="card-flaechen">
+      <div class="card-header" onclick="toggleCard('card-flaechen')">
+        <div>
+          <div class="card-label">01</div>
+          <div class="card-title">Grundstück &amp; Flächen</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="card-summary" id="sum-flaechen">–</div>
+          <div class="card-toggle">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <div class="field">
+            <label>Grundstücksfläche</label>
+            <div class="input-wrap"><input type="number" id="gf" value="0" min="0" oninput="onInput()"><span class="input-unit">m²</span></div>
+            <div class="field-note">Für €/m² GF im Ergebnis</div>
+          </div>
+          <div class="field">
+            <label>Bruttogrundfläche (BGF)</label>
+            <div class="input-wrap"><input type="number" id="bgf" value="0" min="0" oninput="onInput()"><span class="input-unit">m²</span></div>
+            <div class="field-note">Basis für Baukosten</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Nutzfläche (NF)</label>
+            <div class="input-wrap"><input type="number" id="nf" value="0" min="0" oninput="onInput()"><span class="input-unit">m²</span></div>
+            <div class="field-note">Oder NF/BGF-Faktor →</div>
+          </div>
+          <div class="field">
+            <label>NF/BGF-Faktor</label>
+            <div class="input-wrap"><input type="number" id="nfFaktor" value="0.75" min="0" max="1" step="0.01" oninput="onNfFaktor()"><span class="input-unit">–</span></div>
+            <div class="field-note">Überschreibt NF wenn BGF &gt; 0</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Geschosse (Wohnen)</label>
+            <div class="input-wrap"><input type="number" id="geschosse" value="0" min="0" oninput="onInput()"><span class="input-unit">Stk.</span></div>
+          </div>
+          <div class="field">
+            <label>BGZ / GFZ (Info)</label>
+            <div class="input-wrap"><input type="number" id="gfz" value="0" min="0" step="0.1" oninput="onInput()" readonly style="background:var(--color-bg);color:var(--color-text-muted)"><span class="input-unit">–</span></div>
+            <div class="field-note">Errechnet aus BGF/GF</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Ertragswert / GDV -->
+    <div class="card is-open" id="card-ertrag">
+      <div class="card-header" onclick="toggleCard('card-ertrag')">
+        <div>
+          <div class="card-label">02</div>
+          <div class="card-title">Verkaufserlös / Ertragswert (GDV)</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="card-summary" id="sum-gdv">–</div>
+          <div class="card-toggle">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="toggle-row">
+          <button class="toggle-btn active" id="tab-verkauf" onclick="setGdvMode('verkauf')">Neubauprojekt / Verkauf</button>
+          <button class="toggle-btn" id="tab-rendite" onclick="setGdvMode('rendite')">Renditeobjekt / Zinshausbewertung</button>
+        </div>
+
+        <!-- VERKAUF MODE -->
+        <div id="mode-verkauf">
+          <div class="section-label">Wohneinheiten</div>
+          <div class="field-row">
+            <div class="field">
+              <label>Verkaufsfläche Wohnen</label>
+              <div class="input-wrap"><input type="number" id="wohnNf" value="0" min="0" oninput="onInput()"><span class="input-unit">m²</span></div>
+            </div>
+            <div class="field">
+              <label>Verkaufspreis</label>
+              <div class="input-wrap"><input type="number" id="wohnPreis" value="5000" min="0" oninput="onInput()"><span class="input-unit">€/m²</span></div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+          <div class="section-label">Gewerbefläche (optional)</div>
+          <div class="field-row">
+            <div class="field">
+              <label>Gewerbefläche</label>
+              <div class="input-wrap"><input type="number" id="gewNf" value="0" min="0" oninput="onInput()"><span class="input-unit">m²</span></div>
+            </div>
+            <div class="field">
+              <label>Verkaufspreis Gewerbe</label>
+              <div class="input-wrap"><input type="number" id="gewPreis" value="3000" min="0" oninput="onInput()"><span class="input-unit">€/m²</span></div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+          <div class="section-label">Stellplätze</div>
+          <div class="field-row">
+            <div class="field">
+              <label>Tiefgaragen-SP</label>
+              <div class="input-wrap"><input type="number" id="tgAnz" value="0" min="0" oninput="onInput()"><span class="input-unit">Stk.</span></div>
+            </div>
+            <div class="field">
+              <label>Preis TG-SP</label>
+              <div class="input-wrap"><input type="number" id="tgPreis" value="20000" min="0" oninput="onInput()"><span class="input-unit">€</span></div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Freistellplätze</label>
+              <div class="input-wrap"><input type="number" id="fpAnz" value="0" min="0" oninput="onInput()"><span class="input-unit">Stk.</span></div>
+            </div>
+            <div class="field">
+              <label>Preis Freistellplatz</label>
+              <div class="input-wrap"><input type="number" id="fpPreis" value="8000" min="0" oninput="onInput()"><span class="input-unit">€</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RENDITE MODE -->
+        <div id="mode-rendite" style="display:none">
+          <div class="section-label">Mietertrag</div>
+          <div class="field-row">
+            <div class="field">
+              <label>Jahresnettomiete</label>
+              <div class="input-wrap"><input type="number" id="jnm" value="0" min="0" oninput="onInput()"><span class="input-unit">€/Jahr</span></div>
+              <div class="field-note">Mieterlöse netto (ohne USt.)</div>
+            </div>
+            <div class="field">
+              <label>Kapitalisierungsfaktor</label>
+              <div class="input-wrap"><input type="number" id="kapFaktor" value="25" min="1" max="60" step="0.5" oninput="onInput()"><span class="input-unit">×</span></div>
+              <div class="field-note">Vervielfältiger / KGV</div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Bewirtschaftungskosten</label>
+              <div class="input-wrap"><input type="number" id="bewirtPct" value="20" min="0" max="50" step="0.5" oninput="onInput()"><span class="input-unit">%</span></div>
+              <div class="field-note">Instandhaltung, Verwaltung etc.</div>
+            </div>
+            <div class="field">
+              <label>Leerstandsrisiko</label>
+              <div class="input-wrap"><input type="number" id="leerstand" value="3" min="0" max="20" step="0.5" oninput="onInput()"><span class="input-unit">%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+        <div class="section-label">Abzüge vom Bruttoerlös</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Vermarktungskosten/-risiko</label>
+            <div class="input-wrap"><input type="number" id="vermarktPct" value="2" min="0" max="20" step="0.5" oninput="onInput()"><span class="input-unit">%</span></div>
+            <div class="field-note">Mängelrisiko, Rabatte etc.</div>
+          </div>
+          <div class="field">
+            <label>Sonstige Abzüge</label>
+            <div class="input-wrap"><input type="number" id="abzugSonstPct" value="0" min="0" max="20" step="0.5" oninput="onInput()"><span class="input-unit">%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Baukosten -->
+    <div class="card is-open" id="card-bau">
+      <div class="card-header" onclick="toggleCard('card-bau')">
+        <div>
+          <div class="card-label">03</div>
+          <div class="card-title">Baukosten</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="card-summary" id="sum-bau">–</div>
+          <div class="card-toggle">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <div class="field">
+            <label>Baukosten je m² BGF</label>
+            <div class="input-wrap"><input type="number" id="bkBgf" value="2000" min="0" oninput="onInput()"><span class="input-unit">€/m²</span></div>
+            <div class="field-note">Inkl. Rohbau, Ausbau, Haustechnik</div>
+          </div>
+          <div class="field">
+            <label>BGF (aus Abschnitt 01)</label>
+            <div class="input-wrap"><input type="number" id="bkBgfRef" value="0" min="0" readonly style="background:var(--color-bg);color:var(--color-text-muted)" oninput="onInput()"><span class="input-unit">m²</span></div>
+            <div class="field-note">Automatisch übernommen</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Außenanlagen</label>
+            <div class="input-wrap"><input type="number" id="aussenanlagen" value="0" min="0" oninput="onInput()"><span class="input-unit">€</span></div>
+            <div class="field-note">Absolut oder leer lassen</div>
+          </div>
+          <div class="field">
+            <label>Sonderkosten</label>
+            <div class="input-wrap"><input type="number" id="sonderkosten" value="0" min="0" oninput="onInput()"><span class="input-unit">€</span></div>
+            <div class="field-note">Abbruch, Altlasten, etc.</div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+        <div class="section-label">Baunebenkosten (% der Baukosten)</div>
+        <div class="field-row three">
+          <div class="field">
+            <label>Architektenhonorar</label>
+            <div class="input-wrap"><input type="number" id="bnkArch" value="8" min="0" max="20" step="0.5" oninput="onInput()"><span class="input-unit">%</span></div>
+          </div>
+          <div class="field">
+            <label>Fachplanung</label>
+            <div class="input-wrap"><input type="number" id="bnkFach" value="4" min="0" max="15" step="0.5" oninput="onInput()"><span class="input-unit">%</span></div>
+            <div class="field-note">Statik, TGA, etc.</div>
+          </div>
+          <div class="field">
+            <label>Örtl. Bauaufsicht</label>
+            <div class="input-wrap"><input type="number" id="bnkOba" value="2" min="0" max="10" step="0.5" oninput="onInput()"><span class="input-unit">%</span></div>
+          </div>
+        </div>
+        <div class="field-row three">
+          <div class="field">
+            <label>Behördengebühren</label>
+            <div class="input-wrap"><input type="number" id="bnkBehoerde" value="1.5" min="0" max="5" step="0.1" oninput="onInput()"><span class="input-unit">%</span></div>
+          </div>
+          <div class="field">
+            <label>Prüfingenieure</label>
+            <div class="input-wrap"><input type="number" id="bnkPruf" value="0.5" min="0" max="5" step="0.1" oninput="onInput()"><span class="input-unit">%</span></div>
+          </div>
+          <div class="field">
+            <label>Sonstiges</label>
+            <div class="input-wrap"><input type="number" id="bnkSonst" value="1" min="0" max="10" step="0.5" oninput="onInput()"><span class="input-unit">%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Projektnebenkosten -->
+    <div class="card is-open" id="card-nbk">
+      <div class="card-header" onclick="toggleCard('card-nbk')">
+        <div>
+          <div class="card-label">04</div>
+          <div class="card-title">Projektentwicklungskosten</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="card-summary" id="sum-nbk">–</div>
+          <div class="card-toggle">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="section-label">Vertrieb &amp; Marketing</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Vertriebskosten</label>
+            <div class="input-wrap"><input type="number" id="vertrieb" value="3.5" min="0" max="10" step="0.25" oninput="onInput()"><span class="input-unit">% GDV</span></div>
+            <div class="field-note">Makler, Marketing</div>
+          </div>
+          <div class="field">
+            <label>Projektsteuerung</label>
+            <div class="input-wrap"><input type="number" id="pkSteuerung" value="2" min="0" max="10" step="0.25" oninput="onInput()"><span class="input-unit">% BK</span></div>
+            <div class="field-note">% der Baukosten</div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+        <div class="section-label">Finanzierungskosten</div>
+        <div class="field-row three">
+          <div class="field">
+            <label>Zinssatz p.a.</label>
+            <div class="input-wrap"><input type="number" id="finZins" value="5" min="0" max="20" step="0.25" oninput="onInput()"><span class="input-unit">%</span></div>
+          </div>
+          <div class="field">
+            <label>Laufzeit</label>
+            <div class="input-wrap"><input type="number" id="finLaufzeit" value="2" min="0.5" max="10" step="0.5" oninput="onInput()"><span class="input-unit">Jahre</span></div>
+          </div>
+          <div class="field">
+            <label>Finanzierungsanteil</label>
+            <div class="input-wrap"><input type="number" id="finAnteil" value="70" min="0" max="100" step="5" oninput="onInput()"><span class="input-unit">%</span></div>
+            <div class="field-note">% der Baukosten</div>
+          </div>
+        </div>
+        <div class="field-note mt-8" style="margin-bottom:12px">Berechnung: Zinsen auf 50% der Bausumme × Laufzeit (Mittelwert Abrufkurve)</div>
+
+        <div class="section-divider"></div>
+        <div class="section-label">Reserve &amp; Sonstiges</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Unvorhergesehenes</label>
+            <div class="input-wrap"><input type="number" id="unvorhergesehen" value="5" min="0" max="20" step="0.5" oninput="onInput()"><span class="input-unit">%</span></div>
+            <div class="field-note">% aller sonstigen Kosten</div>
+          </div>
+          <div class="field">
+            <label>Sonstige NK absolut</label>
+            <div class="input-wrap"><input type="number" id="nbkSonstAbs" value="0" min="0" oninput="onInput()"><span class="input-unit">€</span></div>
+            <div class="field-note">Gutachten, Rechtsberatung etc.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Ankaufnebenkosten -->
+    <div class="card is-open" id="card-ank">
+      <div class="card-header" onclick="toggleCard('card-ank')">
+        <div>
+          <div class="card-label">05</div>
+          <div class="card-title">Ankaufnebenkosten Grundstück (AT)</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="card-summary" id="sum-ank">–</div>
+          <div class="card-toggle">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <div class="field">
+            <label>Grunderwerbsteuer</label>
+            <div class="input-wrap"><input type="number" id="ankGrest" value="3.5" min="0" max="10" step="0.1" oninput="onInput()"><span class="input-unit">%</span></div>
+            <div class="field-note">Standard AT: 3,5 %</div>
+          </div>
+          <div class="field">
+            <label>Grundbucheintragung</label>
+            <div class="input-wrap"><input type="number" id="ankGb" value="1.1" min="0" max="5" step="0.1" oninput="onInput()"><span class="input-unit">%</span></div>
+            <div class="field-note">Standard AT: 1,1 %</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Notar / Rechtsanwalt</label>
+            <div class="input-wrap"><input type="number" id="ankNotar" value="1.5" min="0" max="5" step="0.1" oninput="onInput()"><span class="input-unit">%</span></div>
+          </div>
+          <div class="field">
+            <label>Maklerprovision</label>
+            <div class="input-wrap"><input type="number" id="ankMakler" value="0" min="0" max="10" step="0.1" oninput="onInput()"><span class="input-unit">%</span></div>
+            <div class="field-note">Inkl. MwSt., wenn anfallend</div>
+          </div>
+        </div>
+        <div class="field-row full">
+          <div class="field">
+            <label>Ankauf-NK gesamt (errechnet)</label>
+            <div class="input-wrap"><input type="number" id="ankSumDisplay" readonly style="background:var(--color-bg);color:var(--color-accent);font-weight:600"><span class="input-unit">%</span></div>
+            <div class="field-note">Wird auf Residualwert angewendet: Kaufpreis = Residual ÷ (1 + NK-Satz)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Entwicklergewinn -->
+    <div class="card is-open" id="card-gewinn">
+      <div class="card-header" onclick="toggleCard('card-gewinn')">
+        <div>
+          <div class="card-label">06</div>
+          <div class="card-title">Entwicklergewinn</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="card-summary" id="sum-gewinn">–</div>
+          <div class="card-toggle">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <div class="field">
+            <label>Gewinnmarge</label>
+            <div class="input-wrap"><input type="number" id="gewinnPct" value="15" min="0" max="50" step="0.5" oninput="onInput()"><span class="input-unit">% GDV</span></div>
+            <div class="field-note">Typisch: 10–20 % des GDV</div>
+          </div>
+          <div class="field">
+            <label>Entwicklergewinn (errechnet)</label>
+            <div class="input-wrap"><input type="number" id="gewinnAbs" readonly style="background:var(--color-bg);color:var(--color-text-muted)"><span class="input-unit">€</span></div>
+          </div>
+        </div>
+        <div class="field-row full mt-8">
+          <div class="field">
+            <label>Gewinn auf Gesamtkosten (errechnet)</label>
+            <div class="input-wrap"><input type="number" id="gewinnOnCost" readonly style="background:var(--color-bg);color:var(--color-text-muted)"><span class="input-unit">%</span></div>
+            <div class="field-note">Return on Cost – Orientierungswert für die Rentabilität</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Sensitivitätsanalyse -->
+    <div class="card" id="card-sens">
+      <div class="card-header" onclick="toggleCard('card-sens')">
+        <div>
+          <div class="card-label">07</div>
+          <div class="card-title">Sensitivitätsanalyse</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="card-summary">Kaufpreis vs. Gewinn</div>
+          <div class="card-toggle">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.82rem;color:var(--color-text-secondary);margin-bottom:12px">
+          Wie verändert sich der Residualwert bei verschiedenen Kaufpreisen und Entwicklergewinnen?
+        </p>
+        <div style="overflow-x:auto">
+          <table class="sens-table" id="sens-table"></table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /inputs-col -->
+
+  <!-- RESULTS PANEL -->
+  <div class="results-panel">
+    <div class="results-card">
+      <div class="results-header">
+        <div class="results-header-label">Bewertungsergebnis</div>
+        <div class="results-header-title">Residualwert</div>
+      </div>
+      <div class="results-body">
+
+        <!-- HERO -->
+        <div class="residual-hero" id="residual-hero">
+          <div class="residual-hero-label">Kaufpreis Grundstück (Residualwert)</div>
+          <div class="residual-hero-value" id="res-main">– €</div>
+          <div class="residual-hero-sub" id="res-sub">–</div>
+        </div>
+
+        <!-- METRICS -->
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <div class="metric-box-label">je m² Grundstück</div>
+            <div class="metric-box-value" id="res-m2-gf">–</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">je m² BGF</div>
+            <div class="metric-box-value" id="res-m2-bgf">–</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">je m² NF</div>
+            <div class="metric-box-value" id="res-m2-nf">–</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">GDV</div>
+            <div class="metric-box-value" id="res-gdv">–</div>
+          </div>
+        </div>
+
+        <!-- COST BARS -->
+        <div class="cost-bars" id="cost-bars"></div>
+
+        <!-- WATERFALL -->
+        <div class="section-label mt-8">Kostenstruktur im Detail</div>
+        <table class="waterfall" id="waterfall-table"></table>
+
+        <!-- BUTTONS -->
+        <button class="btn-primary" onclick="window.print()">Ausdruck / PDF</button>
+        <button class="btn-secondary" onclick="saveProject()">Projekt speichern</button>
+      </div>
+    </div>
+  </div><!-- /results-panel -->
+</main>
+
+<footer>
+  <div>© 2025 <a href="mailto:mthalhamer@thalhamer.com">Markus O. Thalhamer</a> · Residualwert-Rechner</div>
+  <p class="disclaimer">
+    Die Inhalte dieser Seite dienen ausschließlich zu Informationszwecken und stellen keine Anlage-, Rechts- oder Steuerberatung dar.
+    Die Berechnungen basieren auf den eingegebenen Annahmen. Für die Richtigkeit, Vollständigkeit und Aktualität der Angaben wird keine Haftung übernommen.
+  </p>
+</footer>
+
+<!-- MODAL: Projekte laden -->
+<div class="modal-backdrop" id="modal-load">
+  <div class="modal">
+    <h2>Gespeicherte Projekte</h2>
+    <div class="project-list" id="project-list"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-load')">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let gdvMode = 'verkauf';
+
+function getInputs() {
+  const n = id => parseFloat(document.getElementById(id)?.value) || 0;
+  const s = id => document.getElementById(id)?.value || '';
+  return {
+    projektname:  s('projektname'),
+    adresse:      s('adresse'),
+    datum:        s('datum'),
+    gf:           n('gf'),
+    bgf:          n('bgf'),
+    nf:           n('nf'),
+    nfFaktor:     n('nfFaktor'),
+    // GDV Verkauf
+    wohnNf:       n('wohnNf'),
+    wohnPreis:    n('wohnPreis'),
+    gewNf:        n('gewNf'),
+    gewPreis:     n('gewPreis'),
+    tgAnz:        n('tgAnz'),
+    tgPreis:      n('tgPreis'),
+    fpAnz:        n('fpAnz'),
+    fpPreis:      n('fpPreis'),
+    vermarktPct:  n('vermarktPct'),
+    abzugSonstPct:n('abzugSonstPct'),
+    // GDV Rendite
+    jnm:          n('jnm'),
+    kapFaktor:    n('kapFaktor'),
+    bewirtPct:    n('bewirtPct'),
+    leerstand:    n('leerstand'),
+    // Baukosten
+    bkBgf:        n('bkBgf'),
+    aussenanlagen:n('aussenanlagen'),
+    sonderkosten: n('sonderkosten'),
+    bnkArch:      n('bnkArch'),
+    bnkFach:      n('bnkFach'),
+    bnkOba:       n('bnkOba'),
+    bnkBehoerde:  n('bnkBehoerde'),
+    bnkPruf:      n('bnkPruf'),
+    bnkSonst:     n('bnkSonst'),
+    // PEK
+    vertrieb:     n('vertrieb'),
+    pkSteuerung:  n('pkSteuerung'),
+    finZins:      n('finZins'),
+    finLaufzeit:  n('finLaufzeit'),
+    finAnteil:    n('finAnteil'),
+    unvorhergesehen: n('unvorhergesehen'),
+    nbkSonstAbs:  n('nbkSonstAbs'),
+    // Ankauf AT
+    ankGrest:     n('ankGrest'),
+    ankGb:        n('ankGb'),
+    ankNotar:     n('ankNotar'),
+    ankMakler:    n('ankMakler'),
+    // Gewinn
+    gewinnPct:    n('gewinnPct'),
+    gdvMode,
+  };
+}
+
+// ─────────────────────────────────────────────
+// CALCULATION
+// ─────────────────────────────────────────────
+function calc(inp) {
+  // NF: use nfFaktor × bgf if bgf set, else manual nf
+  const effectiveNf = inp.bgf > 0 ? inp.bgf * inp.nfFaktor : inp.nf;
+
+  // GDV
+  let erlWohnen = 0, erlGewerbe = 0, erlTg = 0, erlFp = 0, erlosBrutto = 0;
+  if (inp.gdvMode === 'verkauf') {
+    erlWohnen  = inp.wohnNf  * inp.wohnPreis;
+    erlGewerbe = inp.gewNf   * inp.gewPreis;
+    erlTg      = inp.tgAnz   * inp.tgPreis;
+    erlFp      = inp.fpAnz   * inp.fpPreis;
+    erlosBrutto = erlWohnen + erlGewerbe + erlTg + erlFp;
+  } else {
+    // Rendite: JNM × (1 - Bewirtschaftung - Leerstand) × Faktor
+    const jnmNetto = inp.jnm * (1 - inp.bewirtPct/100 - inp.leerstand/100);
+    erlosBrutto = jnmNetto * inp.kapFaktor;
+    erlWohnen   = erlosBrutto;
+  }
+  const abzugVermarkt = erlosBrutto * (inp.vermarktPct / 100);
+  const abzugSonst    = erlosBrutto * (inp.abzugSonstPct / 100);
+  const gdv = erlosBrutto - abzugVermarkt - abzugSonst;
+
+  // Baukosten
+  const bkRoh    = inp.bgf * inp.bkBgf;
+  const bnkSatz  = (inp.bnkArch + inp.bnkFach + inp.bnkOba + inp.bnkBehoerde + inp.bnkPruf + inp.bnkSonst) / 100;
+  const bauNbk   = bkRoh * bnkSatz;
+  const bkSonder = inp.aussenanlagen + inp.sonderkosten;
+  const bkGesamt = bkRoh + bauNbk + bkSonder;
+
+  // Projektentwicklungskosten
+  const vertriebskosten  = gdv    * (inp.vertrieb    / 100);
+  const projektsteuerung = bkRoh  * (inp.pkSteuerung / 100);
+  const finBasis         = bkGesamt * (inp.finAnteil  / 100);
+  const finanzierung     = finBasis * (inp.finZins / 100) * inp.finLaufzeit * 0.5;
+  const basisOhneReserve = bkGesamt + vertriebskosten + projektsteuerung + finanzierung + inp.nbkSonstAbs;
+  const reserve          = basisOhneReserve * (inp.unvorhergesehen / 100);
+  const pekGesamt        = vertriebskosten + projektsteuerung + finanzierung + inp.nbkSonstAbs + reserve;
+
+  const gesamtkosten = bkGesamt + pekGesamt;
+
+  // Entwicklergewinn
+  const entwicklergewinn = gdv * (inp.gewinnPct / 100);
+
+  // Residualwert vor Ankaufnebenkosten
+  const residualVorAnk = gdv - gesamtkosten - entwicklergewinn;
+
+  // Ankaufnebenkosten AT (circular → Kaufpreis = residualVorAnk / (1 + NK-Satz))
+  const ankSatz = (inp.ankGrest + inp.ankGb + inp.ankNotar + inp.ankMakler) / 100;
+  const kaufpreis  = residualVorAnk / (1 + ankSatz);
+  const ankNbk     = residualVorAnk - kaufpreis;
+  const residualwert = kaufpreis;
+
+  // Per-m²
+  const rePerGf  = inp.gf > 0   ? residualwert / inp.gf   : 0;
+  const rePerBgf = inp.bgf > 0  ? residualwert / inp.bgf  : 0;
+  const rePerNf  = effectiveNf > 0 ? residualwert / effectiveNf : 0;
+
+  // Gewinn auf Kosten
+  const roc = gesamtkosten > 0 ? entwicklergewinn / gesamtkosten * 100 : 0;
+
+  return {
+    effectiveNf,
+    erlWohnen, erlGewerbe, erlTg, erlFp, erlosBrutto,
+    abzugVermarkt, abzugSonst, gdv,
+    bkRoh, bauNbk, bkSonder, bkGesamt,
+    vertriebskosten, projektsteuerung, finanzierung, reserve,
+    nbkSonstAbs: inp.nbkSonstAbs, pekGesamt,
+    gesamtkosten, entwicklergewinn,
+    ankNbk, ankSatz, residualwert,
+    rePerGf, rePerBgf, rePerNf,
+    roc,
+    gdvPct: (v) => gdv > 0 ? v / gdv * 100 : 0,
+  };
+}
+
+// ─────────────────────────────────────────────
+// FORMATTING
+// ─────────────────────────────────────────────
+const fmtEur = v => new Intl.NumberFormat('de-AT', {style:'currency', currency:'EUR', maximumFractionDigits:0}).format(v);
+const fmtNum = (v, d=1) => new Intl.NumberFormat('de-AT', {minimumFractionDigits:d, maximumFractionDigits:d}).format(v);
+const fmtPct = (v, d=1) => fmtNum(v, d) + '\u202f%';
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function render() {
+  const inp = getInputs();
+  const r   = calc(inp);
+  const gdv = r.gdv;
+
+  // Sync BGF reference
+  document.getElementById('bkBgfRef').value = inp.bgf || '';
+  // GFZ
+  const gfz = inp.gf > 0 && inp.bgf > 0 ? (inp.bgf / inp.gf) : 0;
+  document.getElementById('gfz').value = gfz > 0 ? fmtNum(gfz, 2) : '';
+  // Ankauf NK anzeigen
+  const ankTotal = inp.ankGrest + inp.ankGb + inp.ankNotar + inp.ankMakler;
+  document.getElementById('ankSumDisplay').value = fmtNum(ankTotal, 2);
+  // Gewinn absolut
+  document.getElementById('gewinnAbs').value   = r.entwicklergewinn > 0 ? Math.round(r.entwicklergewinn) : '';
+  document.getElementById('gewinnOnCost').value = r.roc > 0 ? fmtNum(r.roc, 1) : '';
+
+  // Card summaries
+  document.getElementById('sum-flaechen').textContent = inp.bgf > 0 ? `BGF ${fmtNum(inp.bgf, 0)} m²` : '–';
+  document.getElementById('sum-gdv').textContent      = gdv > 0 ? fmtEur(gdv) : '–';
+  document.getElementById('sum-bau').textContent      = r.bkGesamt > 0 ? fmtEur(r.bkGesamt) : '–';
+  document.getElementById('sum-nbk').textContent      = r.pekGesamt > 0 ? fmtEur(r.pekGesamt) : '–';
+  document.getElementById('sum-ank').textContent      = `${fmtNum(ankTotal,1)} %`;
+  document.getElementById('sum-gewinn').textContent   = r.entwicklergewinn > 0 ? fmtEur(r.entwicklergewinn) : '–';
+
+  // NF auto
+  if (inp.bgf > 0) {
+    document.getElementById('nf').value = Math.round(r.effectiveNf);
+  }
+
+  // HERO
+  const hero = document.getElementById('residual-hero');
+  hero.classList.toggle('negative', r.residualwert < 0);
+  document.getElementById('res-main').textContent = fmtEur(r.residualwert);
+  const subParts = [];
+  if (r.rePerGf  > 0) subParts.push(`${fmtEur(r.rePerGf)}/m² GF`);
+  if (r.rePerBgf > 0) subParts.push(`${fmtEur(r.rePerBgf)}/m² BGF`);
+  document.getElementById('res-sub').textContent = subParts.join('   ·   ') || '(Grundstücksfläche/BGF eingeben für €/m²)';
+
+  // Metric boxes
+  document.getElementById('res-m2-gf') .textContent = r.rePerGf  > 0 ? fmtEur(r.rePerGf)  : '–';
+  document.getElementById('res-m2-bgf').textContent = r.rePerBgf > 0 ? fmtEur(r.rePerBgf) : '–';
+  document.getElementById('res-m2-nf') .textContent = r.rePerNf  > 0 ? fmtEur(r.rePerNf)  : '–';
+  document.getElementById('res-gdv')   .textContent = gdv > 0 ? fmtEur(gdv) : '–';
+
+  // COST BARS
+  const bars = [
+    { label: 'Baukosten',    val: r.bkGesamt,          color: '#0d6e4f' },
+    { label: 'PE-Kosten',    val: r.pekGesamt,          color: '#0b5e43' },
+    { label: 'Ent.-Gewinn',  val: r.entwicklergewinn,   color: '#16a34a' },
+    { label: 'Ankauf-NK',    val: r.ankNbk,             color: '#888' },
+    { label: 'Grundstück',   val: r.residualwert > 0 ? r.residualwert : 0, color: '#ca8a04' },
+  ];
+  const barsTotal = bars.reduce((a,b) => a + b.val, 0) || 1;
+  document.getElementById('cost-bars').innerHTML = bars.map(b => {
+    const pct = Math.max(0, b.val / barsTotal * 100);
+    return `<div class="cost-bar-row">
+      <div class="cost-bar-label">${b.label}</div>
+      <div class="cost-bar-track"><div class="cost-bar-fill" style="width:${pct.toFixed(1)}%;background:${b.color}"></div></div>
+      <div class="cost-bar-pct">${fmtNum(pct,1)} %</div>
+    </div>`;
+  }).join('');
+
+  // WATERFALL
+  const wf = [];
+  // GDV
+  wf.push({ cls:'wf-section', label:'Ertragswert (GDV)', val:'' });
+  if (inp.gdvMode === 'verkauf') {
+    if (r.erlWohnen  > 0) wf.push({ cls:'wf-sub', label:'Wohneinheiten',      val: fmtEur(r.erlWohnen) });
+    if (r.erlGewerbe > 0) wf.push({ cls:'wf-sub', label:'Gewerbe',            val: fmtEur(r.erlGewerbe) });
+    if (r.erlTg      > 0) wf.push({ cls:'wf-sub', label:'TG-Stellplätze',    val: fmtEur(r.erlTg) });
+    if (r.erlFp      > 0) wf.push({ cls:'wf-sub', label:'Freistellplätze',   val: fmtEur(r.erlFp) });
+  } else {
+    wf.push({ cls:'wf-sub', label:'Ertragswert (JNM × Faktor)', val: fmtEur(r.erlosBrutto) });
+  }
+  if (r.abzugVermarkt > 0) wf.push({ cls:'wf-sub', label:'– Vermarktungsabzug', val: `– ${fmtEur(r.abzugVermarkt)}` });
+  if (r.abzugSonst    > 0) wf.push({ cls:'wf-sub', label:'– Sonstige Abzüge',   val: `– ${fmtEur(r.abzugSonst)}` });
+  wf.push({ cls:'wf-total', label:'GDV netto', val: fmtEur(gdv) });
+  // Baukosten
+  wf.push({ cls:'wf-section', label:'Baukosten', val:'' });
+  if (r.bkRoh    > 0) wf.push({ cls:'wf-sub', label:'Baukosten (BGF × €/m²)',  val: `– ${fmtEur(r.bkRoh)}` });
+  if (r.bauNbk   > 0) wf.push({ cls:'wf-sub', label:`Baunebenkosten (${fmtNum(inp.bnkArch+inp.bnkFach+inp.bnkOba+inp.bnkBehoerde+inp.bnkPruf+inp.bnkSonst,1)} %)`, val: `– ${fmtEur(r.bauNbk)}` });
+  if (r.bkSonder > 0) wf.push({ cls:'wf-sub', label:'Außenanlagen / Sonder',   val: `– ${fmtEur(r.bkSonder)}` });
+  wf.push({ cls:'wf-total', label:`Baukosten gesamt (${gdv > 0 ? fmtNum(r.bkGesamt/gdv*100,1) : '–'} % GDV)`, val: `– ${fmtEur(r.bkGesamt)}` });
+  // PEK
+  wf.push({ cls:'wf-section', label:'Projektentwicklungskosten', val:'' });
+  if (r.vertriebskosten  > 0) wf.push({ cls:'wf-sub', label:'Vertrieb / Marketing',    val: `– ${fmtEur(r.vertriebskosten)}` });
+  if (r.projektsteuerung > 0) wf.push({ cls:'wf-sub', label:'Projektsteuerung',         val: `– ${fmtEur(r.projektsteuerung)}` });
+  if (r.finanzierung     > 0) wf.push({ cls:'wf-sub', label:'Finanzierungskosten',       val: `– ${fmtEur(r.finanzierung)}` });
+  if (inp.nbkSonstAbs    > 0) wf.push({ cls:'wf-sub', label:'Sonstige NK (absolut)',     val: `– ${fmtEur(inp.nbkSonstAbs)}` });
+  if (r.reserve          > 0) wf.push({ cls:'wf-sub', label:`Reserve (${inp.unvorhergesehen} %)`, val: `– ${fmtEur(r.reserve)}` });
+  wf.push({ cls:'wf-total', label:`PE-Kosten gesamt (${gdv > 0 ? fmtNum(r.pekGesamt/gdv*100,1) : '–'} % GDV)`, val: `– ${fmtEur(r.pekGesamt)}` });
+  // Gewinn
+  wf.push({ cls:'wf-section', label:'Entwicklergewinn', val:'' });
+  wf.push({ cls:'wf-sub', label: `Gewinnerwartung (${inp.gewinnPct} % GDV)`, val: `– ${fmtEur(r.entwicklergewinn)}` });
+  // Ankauf NK
+  wf.push({ cls:'wf-section', label:'Ankaufnebenkosten Grundstück', val:'' });
+  wf.push({ cls:'wf-sub', label: `GrESt + GB + Notar + Makler (${fmtNum(ankTotal,1)} %)`, val: `– ${fmtEur(r.ankNbk)}` });
+  // Ergebnis
+  wf.push({ cls:'wf-result', label:'Residualwert (Kaufpreis Grundstück)', val: fmtEur(r.residualwert) });
+
+  document.getElementById('waterfall-table').innerHTML = wf.map(row =>
+    `<tr class="${row.cls}"><td>${row.label}</td><td>${row.val}</td></tr>`
+  ).join('');
+
+  // SENSITIVITY TABLE
+  buildSensTable(inp, r);
+}
+
+// ─────────────────────────────────────────────
+// SENSITIVITY TABLE
+// ─────────────────────────────────────────────
+function buildSensTable(inp, r) {
+  const prices = [-10, -5, 0, +5, +10]; // % deviation in Verkaufspreis
+  const gewinnVariants = [10, 12, 15, 18, 20]; // %
+  const curGewinn = inp.gewinnPct;
+  const curPrice  = inp.gdvMode === 'verkauf' ? inp.wohnPreis : inp.jnm;
+
+  let html = '<thead><tr><th>Preis ±%</th>';
+  gewinnVariants.forEach(g => {
+    html += `<th>${g} % Gew.</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  prices.forEach(dp => {
+    html += `<tr><td>${dp >= 0 ? '+' : ''}${dp} %</td>`;
+    gewinnVariants.forEach(g => {
+      const modInp = Object.assign({}, inp, { gewinnPct: g });
+      if (inp.gdvMode === 'verkauf') {
+        modInp.wohnPreis = inp.wohnPreis * (1 + dp/100);
+      } else {
+        modInp.jnm = inp.jnm * (1 + dp/100);
+      }
+      const res = calc(modInp).residualwert;
+      const isBase = (dp === 0 && Math.abs(g - curGewinn) < 0.1);
+      const cls = isBase ? 'sens-highlight' : (res < 0 ? 'neg' : (res > r.residualwert * 1.2 ? 'pos' : ''));
+      html += `<td class="${cls}">${fmtEur(res)}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('sens-table').innerHTML = html;
+}
+
+// ─────────────────────────────────────────────
+// EVENTS
+// ─────────────────────────────────────────────
+function onInput() { render(); }
+
+function onNfFaktor() {
+  const bgf = parseFloat(document.getElementById('bgf').value) || 0;
+  const fak = parseFloat(document.getElementById('nfFaktor').value) || 0.75;
+  if (bgf > 0) {
+    document.getElementById('nf').value = Math.round(bgf * fak);
+  }
+  render();
+}
+
+function setGdvMode(mode) {
+  gdvMode = mode;
+  document.getElementById('mode-verkauf').style.display = mode === 'verkauf' ? '' : 'none';
+  document.getElementById('mode-rendite').style.display = mode === 'rendite' ? '' : 'none';
+  document.getElementById('tab-verkauf').classList.toggle('active', mode === 'verkauf');
+  document.getElementById('tab-rendite').classList.toggle('active', mode === 'rendite');
+  render();
+}
+
+function toggleCard(id) {
+  document.getElementById(id).classList.toggle('is-open');
+}
+
+// ─────────────────────────────────────────────
+// SAVE / LOAD
+// ─────────────────────────────────────────────
+function serializeState() {
+  const inp = getInputs();
+  return JSON.stringify({ ...inp, _saved: new Date().toISOString() });
+}
+
+function loadState(data) {
+  const s = JSON.parse(data);
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val !== undefined && val !== null) el.value = val;
+  };
+  Object.entries(s).forEach(([k, v]) => {
+    if (!k.startsWith('_')) set(k, v);
+  });
+  if (s.gdvMode) setGdvMode(s.gdvMode);
+  render();
+}
+
+function saveProject() {
+  const inp = getInputs();
+  const name = inp.projektname || 'Unbenannt';
+  const key = 'rv_project_' + Date.now();
+  const data = { name, data: serializeState(), saved: new Date().toLocaleString('de-AT') };
+  localStorage.setItem(key, JSON.stringify(data));
+  showToast('Projekt gespeichert: ' + name);
+}
+
+function openLoadModal() {
+  const list = document.getElementById('project-list');
+  const items = Object.entries(localStorage)
+    .filter(([k]) => k.startsWith('rv_project_'))
+    .sort(([a],[b]) => b.localeCompare(a));
+
+  if (items.length === 0) {
+    list.innerHTML = '<p style="font-size:0.85rem;color:var(--color-text-muted);padding:12px 0">Keine gespeicherten Projekte.</p>';
+  } else {
+    list.innerHTML = items.map(([key, raw]) => {
+      const p = JSON.parse(raw);
+      return `<div class="project-item" onclick="loadProject('${key}')">
+        <div>
+          <div class="project-item-name">${p.name}</div>
+          <div class="project-item-date">${p.saved}</div>
+        </div>
+        <div class="project-item-del" onclick="event.stopPropagation();deleteProject('${key}')">Löschen</div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('modal-load').classList.add('open');
+}
+
+function loadProject(key) {
+  const raw = localStorage.getItem(key);
+  if (!raw) return;
+  const p = JSON.parse(raw);
+  loadState(p.data);
+  closeModal('modal-load');
+}
+
+function deleteProject(key) {
+  localStorage.removeItem(key);
+  openLoadModal();
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function newProject() {
+  if (!confirm('Aktuelles Projekt verwerfen und neu beginnen?')) return;
+  location.reload();
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  Object.assign(t.style, {
+    position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
+    background: 'var(--color-accent)', color: '#fff',
+    padding: '10px 20px', borderRadius: '100px',
+    fontSize: '0.85rem', fontFamily: 'var(--font-sans)', fontWeight: '500',
+    zIndex: '999', boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+    animation: 'fadeIn 0.2s ease',
+  });
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+// Close modal on backdrop click
+document.getElementById('modal-load').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal('modal-load');
+});
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+document.getElementById('datum').value = new Date().toISOString().split('T')[0];
+render();
+</script>
+</body>
+</html>
