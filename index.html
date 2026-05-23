@@ -818,6 +818,50 @@
     .pv-footer-disclaimer { line-height: 1.5; flex: 1; }
     .pv-footer-sig { text-align: right; white-space: nowrap; }
 
+    /* ── AMPEL ── */
+    .ampel-panel { margin-bottom: 16px; }
+    .ampel-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .ampel-row:last-child { border-bottom: none; }
+    .ampel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ampel-dot.green  { background: var(--color-success); }
+    .ampel-dot.yellow { background: var(--color-warning); }
+    .ampel-dot.red    { background: var(--color-danger); }
+    .ampel-dot.gray   { background: var(--color-border-hover); }
+    .ampel-label {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      flex: 1;
+      min-width: 0;
+    }
+    .ampel-value {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--color-text);
+      white-space: nowrap;
+    }
+    .ampel-msg {
+      font-size: 0.68rem;
+      color: var(--color-text-muted);
+      margin-top: 1px;
+    }
+    .ampel-row.status-red    .ampel-label { color: var(--color-danger); }
+    .ampel-row.status-red    .ampel-value { color: var(--color-danger); }
+    .ampel-row.status-yellow .ampel-label { color: var(--color-warning); }
+    .ampel-row.status-yellow .ampel-value { color: var(--color-warning); }
+    .ampel-row.status-green  .ampel-value { color: var(--color-success); }
+
     /* ── UTILS ── */
     .text-muted { color: var(--color-text-muted); }
     .mt-8 { margin-top: 8px; }
@@ -1501,6 +1545,10 @@
           </div>
         </div>
 
+        <!-- AMPEL -->
+        <div class="section-label mt-8" style="margin-bottom:6px">KPI-Bewertung</div>
+        <div class="ampel-panel" id="ampel-panel"></div>
+
         <!-- COST BARS -->
         <div class="cost-bars" id="cost-bars"></div>
 
@@ -1793,8 +1841,140 @@ function render() {
     `<tr class="${row.cls}"><td>${row.label}</td><td>${row.val}</td></tr>`
   ).join('');
 
+  // AMPEL
+  buildAmpel(inp, r);
+
   // SENSITIVITY TABLE
   buildSensTable(inp, r);
+}
+
+// ─────────────────────────────────────────────
+// AMPEL
+// ─────────────────────────────────────────────
+const KPI_CHECKS = [
+  {
+    label: 'Residualwert',
+    val: (inp,r) => r.residualwert,
+    fmt: (v) => fmtEur(v),
+    check: (inp,r) => {
+      const v = r.residualwert;
+      const pct = r.gdv > 0 ? v/r.gdv*100 : 0;
+      if (v <= 0)    return { s:'red',    msg:'Negativ – Projekt nicht tragfähig' };
+      if (pct < 8)   return { s:'yellow', msg:`Sehr niedrig (${fmtNum(pct,1)} % des GDV)` };
+      return           { s:'green',  msg:`${fmtNum(pct,1)} % des GDV – plausibel` };
+    }
+  },
+  {
+    label: 'Return on Cost',
+    val: (inp,r) => r.roc,
+    fmt: (v) => fmtNum(v,1)+' %',
+    check: (inp,r) => {
+      const v = r.roc;
+      if (v < 10)  return { s:'red',    msg:'Unter Mindestanforderung (< 10 %)' };
+      if (v < 15)  return { s:'yellow', msg:'Grenzwertig (10–15 %)' };
+      return         { s:'green',  msg:'Marktüblich (≥ 15 %)' };
+    }
+  },
+  {
+    label: 'Entwicklergewinn',
+    val: (inp,r) => inp.gewinnPct,
+    fmt: (v) => fmtNum(v,1)+' % GDV',
+    check: (inp,r) => {
+      const v = inp.gewinnPct;
+      if (v < 10)  return { s:'red',    msg:'Unter Mindestrendite (< 10 %)' };
+      if (v < 12)  return { s:'yellow', msg:'Niedrig (10–12 %)' };
+      return         { s:'green',  msg:'Marktüblich (≥ 12 %)' };
+    }
+  },
+  {
+    label: 'Baukosten / GDV',
+    val: (inp,r) => r.gdv > 0 ? r.bkGesamt/r.gdv*100 : 0,
+    fmt: (v) => fmtNum(v,1)+' %',
+    check: (inp,r) => {
+      const v = r.gdv > 0 ? r.bkGesamt/r.gdv*100 : 0;
+      if (v > 68)  return { s:'red',    msg:'Zu hoch (> 68 % des GDV)' };
+      if (v > 58)  return { s:'yellow', msg:'Erhöht (58–68 %)' };
+      if (v === 0) return { s:'gray',   msg:'Keine Daten' };
+      return         { s:'green',  msg:'Im Rahmen (< 58 %)' };
+    }
+  },
+  {
+    label: 'PE-Kosten / GDV',
+    val: (inp,r) => r.gdv > 0 ? r.pekGesamt/r.gdv*100 : 0,
+    fmt: (v) => fmtNum(v,1)+' %',
+    check: (inp,r) => {
+      const v = r.gdv > 0 ? r.pekGesamt/r.gdv*100 : 0;
+      if (v > 28)  return { s:'red',    msg:'Zu hoch (> 28 %)' };
+      if (v > 20)  return { s:'yellow', msg:'Erhöht (20–28 %)' };
+      if (v === 0) return { s:'gray',   msg:'Keine Daten' };
+      return         { s:'green',  msg:'Im Rahmen (< 20 %)' };
+    }
+  },
+  {
+    label: 'Gesamtkosten / GDV',
+    val: (inp,r) => r.gdv > 0 ? (r.bkGesamt+r.pekGesamt)/r.gdv*100 : 0,
+    fmt: (v) => fmtNum(v,1)+' %',
+    check: (inp,r) => {
+      const v = r.gdv > 0 ? (r.bkGesamt+r.pekGesamt)/r.gdv*100 : 0;
+      if (v > 82)  return { s:'red',    msg:'Kritisch (> 82 % des GDV)' };
+      if (v > 72)  return { s:'yellow', msg:'Grenzwertig (72–82 %)' };
+      if (v === 0) return { s:'gray',   msg:'Keine Daten' };
+      return         { s:'green',  msg:'Im Rahmen (≤ 72 %)' };
+    }
+  },
+  {
+    label: 'NF / BGF-Faktor',
+    val: (inp,r) => inp.bgf > 0 ? r.effectiveNf/inp.bgf*100 : 0,
+    fmt: (v) => fmtNum(v,1)+' %',
+    check: (inp,r) => {
+      if (!inp.bgf)  return { s:'gray', msg:'BGF nicht eingegeben' };
+      const v = r.effectiveNf/inp.bgf;
+      if (v < 0.60 || v > 0.90) return { s:'red',    msg:`${fmtNum(v*100,1)} % – unüblicher Wert, prüfen` };
+      if (v < 0.68 || v > 0.83) return { s:'yellow', msg:`${fmtNum(v*100,1)} % – Randbereich` };
+      return                       { s:'green',  msg:`${fmtNum(v*100,1)} % – plausibel` };
+    }
+  },
+  {
+    label: 'GFZ',
+    val: (inp,r) => inp.gf > 0 && inp.bgf > 0 ? inp.bgf/inp.gf : 0,
+    fmt: (v) => v > 0 ? fmtNum(v,2) : '–',
+    check: (inp,r) => {
+      if (!inp.gf || !inp.bgf) return { s:'gray', msg:'GF oder BGF nicht eingegeben' };
+      const v = inp.bgf/inp.gf;
+      if (v < 0.3 || v > 5.5) return { s:'red',    msg:`${fmtNum(v,2)} – Prüfung empfohlen` };
+      if (v < 0.6 || v > 4.0) return { s:'yellow', msg:`${fmtNum(v,2)} – Randbereich` };
+      return                     { s:'green',  msg:`${fmtNum(v,2)} – plausibel` };
+    }
+  },
+  {
+    label: 'Finanzierungskosten / BK',
+    val: (inp,r) => r.bkGesamt > 0 ? r.finanzierung/r.bkGesamt*100 : 0,
+    fmt: (v) => fmtNum(v,1)+' %',
+    check: (inp,r) => {
+      if (!r.finanzierung) return { s:'gray', msg:'Keine Finanzierung eingegeben' };
+      const v = r.bkGesamt > 0 ? r.finanzierung/r.bkGesamt*100 : 0;
+      if (v > 12)  return { s:'red',    msg:`${fmtNum(v,1)} % – sehr hoch` };
+      if (v > 8)   return { s:'yellow', msg:`${fmtNum(v,1)} % – erhöht` };
+      return         { s:'green',  msg:`${fmtNum(v,1)} % – im Rahmen` };
+    }
+  },
+];
+
+function buildAmpel(inp, r) {
+  const html = KPI_CHECKS.map(kpi => {
+    const result  = kpi.check(inp, r);
+    const rawVal  = kpi.val ? kpi.val(inp, r) : 0;
+    const display = kpi.fmt ? kpi.fmt(rawVal) : '';
+    return `<div class="ampel-row status-${result.s}">
+      <div class="ampel-dot ${result.s}"></div>
+      <div style="flex:1;min-width:0">
+        <div class="ampel-label">${kpi.label}</div>
+        <div class="ampel-msg">${result.msg}</div>
+      </div>
+      <div class="ampel-value">${display}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('ampel-panel').innerHTML = html;
 }
 
 // ─────────────────────────────────────────────
